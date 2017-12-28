@@ -12,15 +12,30 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('fonts/fontawesome.min.css') }}" rel="stylesheet">
+
+    @yield('css')
 </head>
 <body>
-    <div id="app">
-        @include('layouts._includes._nav')
+<div id="app">
+    @include('layouts._includes._nav')
 
-        @yield('content')
-    </div>
+    @if(Session::has('flash_message'))
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div align="center" class="alert {{ Session::get('flash_message')['class'] }}">
+                        {{ Session::get('flash_message')['msg'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    @yield('content')
+</div>
+
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

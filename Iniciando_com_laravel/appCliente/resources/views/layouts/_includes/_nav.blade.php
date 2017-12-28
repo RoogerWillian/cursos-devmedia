@@ -19,8 +19,11 @@
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Left Side Of Navbar -->
+
             <ul class="nav navbar-nav">
-                &nbsp;<li><a href="{{ url('/home')  }}">Home</a></li>
+                @auth
+                    <li><a href="{{ route('cliente.index') }}">Clientes</a></li>
+                @endauth
             </ul>
 
             <!-- Right Side Of Navbar -->

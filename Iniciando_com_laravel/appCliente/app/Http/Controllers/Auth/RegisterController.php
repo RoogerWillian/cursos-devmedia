@@ -42,7 +42,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -51,13 +51,22 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+        ], [
+            "name.required" => "Por favor, preencha um nome",
+            "name.max" => "Preencha um nome com no máximo 255 caracteres",
+            "email.required" => "Por favor, preencha um e-mail",
+            "email.email" => "Por favor, preencha um e-mail válido",
+            "email.unique" => "E-mail já está cadastrado",
+            "password.required" => "Por favor, preencha um senha",
+            "password.min" => "Por favor, preencha uma senha com mínimo 6 caracateres",
+            "password.confirmed" => "Confirmação de senha não confere."
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
      */
     protected function create(array $data)
