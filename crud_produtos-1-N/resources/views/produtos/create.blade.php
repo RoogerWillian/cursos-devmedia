@@ -20,7 +20,7 @@
         <hr>
         <div class="form-group">
             <label for="descricao">Descrição</label>
-            <input type="text" class="form-control" placeholder="Descrição" name="descricao" required>
+            <input type="text" class="form-control" placeholder="Descrição" name="descricao" required autofocus>
         </div>
         <div class="row">
             <div class="col-md-4">

@@ -12,7 +12,7 @@
 	</div>        
 @endif 
 <div class="panel panel-default">
-      <div class="panel-heading">Remover a marca</div>
+      <div class="panel-heading"><h3>Remover a marca</h3></div>
 		<div class="panel-body">
 			<form method="post" action="{{route ('marcas.destroy', $marca->id)}}">
             <input type="hidden" name="_method" value="DELETE">

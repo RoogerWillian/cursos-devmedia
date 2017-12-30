@@ -2,7 +2,7 @@
 @section('content')
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Detalhes do imóvel</div>
+        <div class="panel-heading"><h3>Detalhes da marca</h3></div>
         <div class="panel-body">  
             <div class="row">
                 <div class="col-md-12">

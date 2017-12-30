@@ -18,7 +18,7 @@
                 <hr>
                 <div class="form-group">
                     <label for="descricao">Nome</label>
-                    <input type="text" class="form-control" placeholder="Nome" name="nome" required>
+                    <input type="text" class="form-control" placeholder="Nome" name="nome" required autofocus>
                 </div>
                 <a href="{{ url()->previous() }}" class="btn btn-default">Voltar</a>
                 <button type="submit" class="btn btn-primary">Cadastrar</button>

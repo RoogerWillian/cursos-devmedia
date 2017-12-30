@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use App\Produto;
@@ -11,10 +12,11 @@ use Validator;
 class ProdutoController extends Controller
 {
 
-    protected function validarProduto($request){
+    protected function validarProduto($request)
+    {
         $validator = Validator::make($request->all(), [
             "descricao" => "required",
-            "preco"=> "required | numeric",
+            "preco" => "required | numeric",
             "cor" => "required",
             "peso" => "required | numeric",
             "marca_id" => "required | numeric",
@@ -29,17 +31,17 @@ class ProdutoController extends Controller
      */
     public function index(Request $request)
     {
-        $qtd = $request['qtd'] ?: 2;
+        $qtd = $request['qtd'] ?: 10;
         $page = $request['page'] ?: 1;
         $buscar = $request['buscar'];
 
-        Paginator::currentPageResolver(function () use ($page){
+        Paginator::currentPageResolver(function () use ($page) {
             return $page;
         });
 
-        if($buscar){
-            $produtos = Produto::where('descricao','=', $buscar)->paginate($qtd);
-        }else{  
+        if ($buscar) {
+            $produtos = Produto::where('descricao', 'like', '%' . $buscar . '%')->paginate($qtd);
+        } else {
             $produtos = Produto::paginate($qtd);
 
         }
@@ -61,13 +63,13 @@ class ProdutoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $validator = $this->validarProduto($request);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
         $dados = $request->all();
@@ -78,26 +80,26 @@ class ProdutoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $produto = Produto::find($id);
-        
+
         return view('produtos.show', compact('produto'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $produto = Produto::find($id);
-        $marcas = Marca::all();        
+        $marcas = Marca::all();
 
         return view('produtos.edit', compact('produto', 'marcas'));
     }
@@ -105,29 +107,29 @@ class ProdutoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $validator = $this->validarProduto($request);
-        
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
 
         $produto = Produto::find($id);
         $dados = $request->all();
         $produto->update($dados);
-        
+
         return redirect()->route('produtos.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
