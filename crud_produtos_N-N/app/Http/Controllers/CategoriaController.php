@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use App\categoria;
@@ -12,7 +13,8 @@ use Illuminate\Support\Facades\DB;
 class CategoriaController extends Controller
 {
 
-    protected function validarCategoria($request){
+    protected function validarCategoria($request)
+    {
         $validator = Validator::make($request->all(), [
             "descricao" => "required"
         ]);
@@ -30,13 +32,13 @@ class CategoriaController extends Controller
         $page = $request['page'] ?: 1;
         $buscar = $request['buscar'];
 
-        Paginator::currentPageResolver(function () use ($page){
+        Paginator::currentPageResolver(function () use ($page) {
             return $page;
         });
 
-        if($buscar){
-            $categorias = Categoria::where('descricao','=', $buscar)->paginate($qtd);
-        }else{  
+        if ($buscar) {
+            $categorias = Categoria::where('descricao', '=', $buscar)->paginate($qtd);
+        } else {
             $categorias = Categoria::paginate($qtd);
 
         }
@@ -58,13 +60,13 @@ class CategoriaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $validator = $this->validarCategoria($request);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
         $dados = $request->all();
@@ -76,67 +78,70 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $categoria = Categoria::find($id);
-        
+
         return view('categorias.show', compact('categoria'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $categoria = Categoria::find($id);
-        
+
         return view('categorias.edit', compact('categoria'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $validator = $this->validarCategoria($request);
-        
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
 
         $categoria = Categoria::find($id);
         $dados = $request->all();
         $categoria->update($dados);
-        
+
         return redirect()->route('categorias.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {        
-        if(DB::table('categoria_produto')->where('categoria_id', $id)->count()){
-            $msg = "Não é possível excluir esta categoria. Os produtos com id ( ";
-            $produtos = DB::table('categoria_produto')->where('categoria_id', $id)->get();
-            foreach($produtos as $produto){
-                $msg .= $produto->produto_id." ";
+    {
+        if (DB::table('categoria_produto')->where('categoria_id', $id)->count()) {
+            $msg = "Não é possível excluir esta categoria. Os produtos ( ";
+            $produtos = DB::table('categoria_produto')
+                ->where('categoria_id', $id)
+                ->join('produtos', 'produtos.id', '=', 'categoria_produto.produto_id')
+                ->get();
+            foreach ($produtos as $produto) {
+                $msg .= $produto->descricao . " ";
             }
             $msg .= " ) estão relacionados com esta categoria";
-            \Session::flash('mensagem', ['msg'=>$msg]);
+            \Session::flash('mensagem', ['msg' => $msg]);
             return redirect()->route('categorias.remove', $id);
         }
 
