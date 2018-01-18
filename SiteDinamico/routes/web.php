@@ -34,7 +34,21 @@ Route::get('/admin/login', function () {
 })->name('admin.login');
 
 Route::post('/admin/login', 'Admin\UsuarioController@login')->name('admin.login');
+Route::post('/admin/login', 'Admin\UsuarioController@login')->name('login');
 
-Route::get('/admin', function () {
-    return view('admin.principal.index');
-})->name('admin.principal');
+
+Route::group(['middleware' => 'auth'], function () {
+
+    // Logout
+    Route::get('/admin/login/logout', 'Admin\UsuarioController@logout')->name('admin.logout');
+
+    // Usuarios
+    Route::get('/admin/usuarios', 'Admin\UsuarioController@index')->name('admin.usuarios');
+
+    // Tela inicial
+    Route::get('/admin', function () {
+        return view('admin.principal.index');
+    })->name('admin.principal');
+
+
+});
